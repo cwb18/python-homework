@@ -16,7 +16,7 @@ import os
 import csv
 
 #set path for file
-budget_data_csv = os.path.join("C:\\Users\\joannegibson\\Desktop\\Resources\\budget_data.csv")
+budget_data_csv = os.path.join("C:\\Users\\buchh\\Desktop\\Resources\\budget_data.csv")
 
 #set the output of the text file
 text_path = "output.txt"
