@@ -7,56 +7,52 @@ import csv
 #set the output of the text file
 csv = Path("budget_data.csv")
 
-#Set variables
-total_months = 0
-total_revenue = 0
-revenue = []
-previous_revenue = 0
-month_of_change = []
+#Variables
+
+#total month needs to be set to 0 so I can count 
+totalMonth = 0
+totalRevenue = 0
+previousRevenue = 0
 revenue_change = 0
-greatest_decrease = ["", 9999999]
-greatest_increase = ["", 0]
 revenue_change_list = []
-revenue_average = 0
+month_of_change = []
+greatestIncrease = ["", 0]
+greatestDecrease = ["", 99999999999]
+
+#Read the budget_data.csv file
+with open(cvspath) as revenueData:
+   reader = csv.DictReader(revenueData)
+
+#I need to loop through the data to collect the answers
+   for row in reader:
+
+       #Totaling
+           totalMonth = totalMonth + 1
+           totalRevenue = totalRevenue + int(row["Revenue"])
+
+#changes of revenue calculations
+           revenue_change = int(row["Revenue"]) - previousRevenue
+           previousRevenue = int(row["Revenue"])
+           month_of_change = month_of_change + [row["Date"]]
+
+           #Greatest Increase value
+           if (revenue_change > greatestIncrease[1]):
+               greatestIncrease[1] = revenue_change
+               greatestIncrease[0] = row["Date"]
+
+           if (revenue_change < greatestDecrease[1]):
+               greatestDecrease[0] = row["Date"]
+               greatestDecrease[1] = revenue_change
+        
+# calculate the average revenue outside of the loop
+revenue_avg = sum(revenue_change_list) / len(revenue_change_list)
 
 
-#open the csv file
-with open('budget_data.csv') as csvfile:  
-    csvreader = csv.DictReader(csvfile)
-
-    #Loop through to find total months
-    for row in csvreader:
-
-        #Count the total of months
-        total_months += 1
-
-        #Calculate the total revenue over the entire period
-        total_revenue = total_revenue + int(row["Profit/Losses"])
-
-        #Calculate the average change in revenue between months over the entire period
-        revenue_change = float(row["Profit/Losses"])- previous_revenue
-        previous_revenue = float(row["Profit/Losses"])
-        revenue_change_list = revenue_change_list + [revenue_change]
-        month_of_change = [month_of_change] + [row["Date"]]
-       
-
-        #The greatest increase in revenue (date and amount) over the entire period
-        if revenue_change>greatest_increase[1]:
-            greatest_increase[1]= revenue_change
-            greatest_increase[0] = row['Date']
-
-        #The greatest decrease in revenue (date and amount) over the entire period
-        if revenue_change<greatest_decrease[1]:
-            greatest_decrease[1]= revenue_change
-            greatest_decrease[0] = row['Date']
-    revenue_average = sum(revenue_change_list)/len(revenue_change_list)
-
-#write changes to csv
-with open(text_path, 'w') as file:
-    file.write("Financial Analysis\n")
-    file.write("---------------------\n")
-    file.write("Total Months: %d\n" % total_months)
-    file.write("Total Revenue: $%d\n" % total_revenue)
-    file.write("Average Revenue Change $%d\n" % revenue_average)
-    file.write("Greatest Increase in Revenue: %s ($%s)\n" % (greatest_increase[0], greatest_increase[1]))
-    file.write("Greatest Decrease in Revenue: %s ($%s)\n" % (greatest_decrease[0], greatest_decrease[1]))
+#print the outcomes
+output = (
+    f"Total Months: {totalMonth}\n"
+    f"Total Revenue: {totalRevenue}\n"
+    f"Average Revenue Change: ${revenue_avg}\n"
+    f"Greatest increase in Revenue: {greatestIncrease[0]} ${greatestIncrease[1]}\n"
+    f"Greatest decrease in Revenue: {greatestDecrease[0]} ${greatestDecrease[1]}\n"
+)
