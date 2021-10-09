@@ -7,9 +7,7 @@ import csv
 #set the output of the text file
 csv = Path("budget_data.csv")
 
-#Variables
-
-#total month needs to be set to 0 so I can count 
+#Set Variables
 totalMonth = 0
 totalRevenue = 0
 previousRevenue = 0
